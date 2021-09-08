@@ -1,4 +1,4 @@
-package com.shin.example.batch;
+package com.mokpo.spring.batch;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
