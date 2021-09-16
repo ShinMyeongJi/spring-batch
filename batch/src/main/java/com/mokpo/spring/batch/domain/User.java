@@ -1,12 +1,15 @@
 package com.mokpo.spring.batch.domain;
 
 import lombok.*;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
-@Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="User_info")
@@ -22,12 +25,22 @@ public class User {
     @Column(name="user_name")
     String userName;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    Date crt_dt;
+    @Column(name="crt_dt")
+    LocalDateTime crtDt;
 
     @Column(name="user_email")
     String userEmail;
 
-    @Column(name="user_status")
-    String userStatus;
+    @Column(name="status")
+    @Enumerated(EnumType.STRING)
+    UserStatus status;
+
+
+    @Column
+    private LocalDateTime updatedDate;
+
+    public User setInactive() {
+        this.status = UserStatus.INACTIVE;
+        return this;
+    }
 }
