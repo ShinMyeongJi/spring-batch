@@ -1,6 +1,6 @@
 package com.mokpo.spring.batch.job;
 
-import com.mokpo.spring.batch.domain.User;
+import com.mokpo.spring.batch.domain.UserInfo;
 import com.mokpo.spring.batch.domain.UserStatus;
 import com.mokpo.spring.batch.job.item.QueueItemReader;
 import com.mokpo.spring.batch.repository.UserRepository;
@@ -54,7 +54,7 @@ public class JobConfiguration {
         @Bean
         public Step inactiveJobStep(StepBuilderFactory stepBuilderFactory) {
             return stepBuilderFactory.get("inactiveUserStep") // StepBuilder 생성
-                    .<User, User> chunk(5)
+                    .<UserInfo, UserInfo> chunk(5)
                     .reader(inactiveUserReader())
                     .processor(inactiveUserProcessor())
                     .writer(inactiveUserWriter())
@@ -63,21 +63,20 @@ public class JobConfiguration {
 
         @Bean
         @StepScope // 각 Step 마다 새로운 Bean 만들기 때문에 지연생성이 가능하다.
-        public QueueItemReader<User> inactiveUserReader() {
-            List<User> oldUsers = userRepository.findByUpdatedDateBeforeAndStatusEquals( // 휴면 회원 리스트를 가져온다.
+        public QueueItemReader<UserInfo> inactiveUserReader() {
+            List<UserInfo> oldUsers = userRepository.test( // 휴면 회원 리스트를 가져온다.
                     LocalDateTime.now().minusYears(1), // 오늘로부터 1년 전 가입
                     UserStatus.ACTIVE); // 이면서 user status가 active인 레코드
             return new QueueItemReader<>(oldUsers); // 들어온 레코드들을 효율적으로 담아 쓰기 위해 Queue에 저장한다.
         }
 
-        public ItemProcessor<User, User> inactiveUserProcessor() {
+        public ItemProcessor<UserInfo, UserInfo> inactiveUserProcessor() {
             return user -> user.setInactive(); // 담아온 데이터를 휴면회원으로 전환시킨다.
         }
 
-        public ItemWriter<User> inactiveUserWriter() { // 앞에서 설정한 청크 단위를 받아 List 행..
-            return ((List<? extends User> users) -> userRepository.saveAll(users)); // 수정된 데이터들을 다시 저장한다.
+        public ItemWriter<UserInfo> inactiveUserWriter() { // 앞에서 설정한 청크 단위를 받아 List 행..
+            return ((List<? extends UserInfo> users) -> userRepository.saveAll(users)); // 수정된 데이터들을 다시 저장한다.
         }
-
 
 
 
