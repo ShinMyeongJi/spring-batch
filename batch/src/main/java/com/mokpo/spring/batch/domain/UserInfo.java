@@ -1,11 +1,9 @@
 package com.mokpo.spring.batch.domain;
 
 import lombok.*;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 @Getter
@@ -14,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Table(name="User_info")
 @Entity
-public class User {
+public class UserInfo {
 
     @Id
     String UserId;
@@ -39,7 +37,7 @@ public class User {
     @Column
     private LocalDateTime updatedDate;
 
-    public User setInactive() {
+    public UserInfo setInactive() {
         this.status = UserStatus.INACTIVE;
         return this;
     }
