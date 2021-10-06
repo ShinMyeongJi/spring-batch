@@ -60,11 +60,10 @@ public class JobConfiguration {
                     .writer(inactiveUserWriter())
                     .build();
         }
-
         @Bean
         @StepScope // 각 Step 마다 새로운 Bean 만들기 때문에 지연생성이 가능하다.
         public QueueItemReader<UserInfo> inactiveUserReader() {
-            List<UserInfo> oldUsers = userRepository.test( // 휴면 회원 리스트를 가져온다.
+            List<UserInfo> oldUsers = userRepository.findByUpdatedDateBeforeAndStatusEquals( // 휴면 회원 리스트를 가져온다.
                     LocalDateTime.now().minusYears(1), // 오늘로부터 1년 전 가입
                     UserStatus.ACTIVE); // 이면서 user status가 active인 레코드
             return new QueueItemReader<>(oldUsers); // 들어온 레코드들을 효율적으로 담아 쓰기 위해 Queue에 저장한다.

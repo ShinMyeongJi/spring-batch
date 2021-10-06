@@ -12,9 +12,9 @@ import java.util.List;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserInfo, String> {
-    //List<User> findByUpdatedDateBeforeAndStatusEquals(LocalDateTime localDateTime, UserStatus userStatus);
+    List<UserInfo> findByUpdatedDateBeforeAndStatusEquals(LocalDateTime localDateTime, UserStatus userStatus);
 
 
-    @Query(value = "SELECT * FROM USER_INFO WHERE UPDATED_DATE < :date AND STATUS = :status", nativeQuery = true)
-    List<UserInfo> test(@Param("date") LocalDateTime localDateTime, @Param("status") UserStatus userStatus);
+   /* @Query(value = "SELECT * FROM USER_INFO WHERE UPDATED_DATE < :date AND STATUS = :status", nativeQuery = true)
+    List<UserInfo> test(@Param("date") LocalDateTime localDateTime, @Param("status") UserStatus userStatus);*/
 }
